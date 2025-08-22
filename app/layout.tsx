@@ -10,6 +10,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+	metadataBase: new URL('https://auroofing.net.au'),
 	title: {
 		default:
 			'Au Roofing - Professional Roofing Services | Expert Roof Repair & Installation',
@@ -85,11 +86,6 @@ export const metadata: Metadata = {
 			'en-AU': 'https://auroofing.net.au',
 		},
 	},
-	viewport: {
-		width: 'device-width',
-		initialScale: 1,
-		maximumScale: 1,
-	},
 	verification: {
 		google: 'google-site-verification-code-here',
 	},
@@ -103,6 +99,13 @@ export const metadata: Metadata = {
 		'msapplication-config': '/browserconfig.xml',
 		'theme-color': '#2563eb',
 	},
+}
+
+export const viewport = {
+	width: 'device-width',
+	initialScale: 1,
+	maximumScale: 1,
+	themeColor: '#2563eb',
 }
 
 export default function RootLayout({
