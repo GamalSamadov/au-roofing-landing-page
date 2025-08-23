@@ -943,9 +943,13 @@ export default function HomePage() {
 											</m.p>
 										</div>
 
-										{/* Interactive Map Area */}
-										<m.div
-											className='relative group cursor-pointer mb-8 lg:mb-10'
+										{/* Interactive Map Area (clickable) */}
+										<m.a
+											href='https://maps.app.goo.gl/YJHkYw81zseTfb9E6'
+											target='_blank'
+											rel='noopener noreferrer'
+											aria-label='Open our service center in Google Maps'
+											className='relative group cursor-pointer mb-8 lg:mb-10 block'
 											initial={{ opacity: 0, scale: 0.95 }}
 											whileInView={{ opacity: 1, scale: 1 }}
 											viewport={{ once: true }}
@@ -988,7 +992,7 @@ export default function HomePage() {
 													<div className='absolute bottom-4 left-4 w-2 h-2 bg-orange-400 rounded-full' />
 												</div>
 											</div>
-										</m.div>
+										</m.a>
 
 										{/* Info Cards */}
 										<div className='grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 mb-8 lg:mb-10'>
@@ -1032,7 +1036,7 @@ export default function HomePage() {
 															Service Area
 														</p>
 														<p className='font-bold text-slate-800 text-sm lg:text-base'>
-															Metro & Surrounding
+															All around Sydney & Surrounding
 														</p>
 													</div>
 												</div>
