@@ -17,6 +17,12 @@ import {
 	Clock,
 	Menu,
 	ExternalLink,
+	Users,
+	Award,
+	Star,
+	Heart,
+	ThumbsUp,
+	CheckCircle,
 } from 'lucide-react'
 import Image from 'next/image'
 import { domAnimation, LazyMotion, m } from 'motion/react'
@@ -53,7 +59,16 @@ const staggerContainer = {
 export default function HomePage() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-	const menuItems = ['Home', 'Services', 'Gallery', 'Contact']
+	const menuItems = [
+		'Home',
+		'About Us',
+		'Why Choose Us',
+		'Services',
+		'Gallery',
+		'Contact',
+	]
+
+	const toSlug = (s: string) => s.toLowerCase().replace(/\s+/g, '-')
 
 	// Before/After data for the slider
 	const beforeAfterData = [
@@ -62,16 +77,12 @@ export default function HomePage() {
 			after: '/after-1.png',
 		},
 		{
+			before: '/before-2.png',
+			after: '/after-2.png',
+		},
+		{
 			before: '/before-3.png',
 			after: '/after-3.png',
-		},
-		{
-			before: '/before-4.png',
-			after: '/after-4.png',
-		},
-		{
-			before: '/before-5.png',
-			after: '/after-5.png',
 		},
 	]
 
@@ -122,12 +133,12 @@ export default function HomePage() {
 					<div className='max-w-6xl mx-auto px-4 sm:px-6'>
 						<div className='flex justify-between items-center h-14 sm:h-16 lg:h-20'>
 							<m.div
-								className='flex items-center'
+								className='flex items-center flex-shrink-0'
 								whileHover={{ scale: 1.05 }}
 								transition={{ type: 'spring', stiffness: 300 }}
 							>
 								<Image
-									src='/logo.jpg'
+									src='/logo.png'
 									alt='Au Roofing Logo'
 									width={500}
 									height={500}
@@ -135,16 +146,16 @@ export default function HomePage() {
 								/>
 							</m.div>
 
-							{/* Desktop Navigation */}
+							{/* Desktop Navigation (only show on large screens to avoid overflow) */}
 							<nav
-								className='hidden md:flex space-x-8 lg:space-x-12'
+								className='hidden lg:flex space-x-6 xl:space-x-12'
 								role='navigation'
 								aria-label='Main navigation'
 							>
 								{menuItems.map((item, index) => (
 									<m.a
 										key={item}
-										href={`#${item.toLowerCase()}`}
+										href={`#${toSlug(item)}`}
 										className='text-foreground hover:text-primary transition-colors font-medium text-sm tracking-wide'
 										initial={{ opacity: 0, y: -10 }}
 										animate={{ opacity: 1, y: 0 }}
@@ -157,23 +168,39 @@ export default function HomePage() {
 								))}
 							</nav>
 
-							{/* Desktop Call Button */}
+							{/* Desktop Call Button (shown from large screens) */}
 							<m.div
-								className='hidden md:block'
+								className='hidden lg:block flex-shrink-0'
 								initial={{ opacity: 0, scale: 0.8 }}
 								animate={{ opacity: 1, scale: 1 }}
 								transition={{ delay: 0.3 }}
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
 							>
-								<Button className='bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg'>
-									<Phone className='w-4 h-4 mr-2' />
-									Call Now
+								<Button
+									asChild
+									className='bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg'
+								>
+									<a href='tel:0449974797'>
+										<Phone className='w-4 h-4 mr-2' />
+										Call Now
+									</a>
 								</Button>
 							</m.div>
 
-							{/* Mobile Menu Button */}
-							<div className='md:hidden flex items-center'>
+							{/* Mobile / Tablet Header - visible below large screens */}
+							<div className='lg:hidden flex-1 flex justify-center items-center'>
+								<a href='tel:0449974797' className='text-center'>
+									<div className='font-semibold text-sm text-primary leading-tight'>
+										Call Now
+									</div>
+									<div className='text-xs text-foreground tracking-tighter'>
+										0449 974 797
+									</div>
+								</a>
+							</div>
+
+							<div className='lg:hidden'>
 								<Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
 									<SheetTrigger asChild>
 										<Button
@@ -199,7 +226,7 @@ export default function HomePage() {
 											{menuItems.map((item, index) => (
 												<m.a
 													key={item}
-													href={`#${item.toLowerCase()}`}
+													href={`#${toSlug(item)}`}
 													className='mobile-menu-item text-foreground hover:text-primary transition-colors font-medium text-lg py-2 px-4 rounded-lg hover:bg-primary/10 block'
 													onClick={() => setIsMenuOpen(false)}
 													initial={{ opacity: 0, x: 20 }}
@@ -210,20 +237,6 @@ export default function HomePage() {
 													{item}
 												</m.a>
 											))}
-											<m.div
-												initial={{ opacity: 0, y: 20 }}
-												animate={{ opacity: 1, y: 0 }}
-												transition={{ delay: 0.4 }}
-												className='pt-4'
-											>
-												<Button
-													className='bg-primary hover:bg-primary/90 text-primary-foreground mt-6 w-full'
-													onClick={() => setIsMenuOpen(false)}
-												>
-													<Phone className='w-4 h-4 mr-2' />
-													Call Now
-												</Button>
-											</m.div>
 										</div>
 									</SheetContent>
 								</Sheet>
@@ -279,8 +292,9 @@ export default function HomePage() {
 												size='lg'
 												className='bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:w-auto'
 												aria-label='Get free roofing estimate'
+												asChild
 											>
-												Get Free Estimate
+												<a href='#contact'>Get Free Quote</a>
 											</Button>
 										</m.div>
 										<m.div
@@ -292,8 +306,9 @@ export default function HomePage() {
 												variant='outline'
 												className='border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-transparent px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:w-auto'
 												aria-label='View our completed roofing projects'
+												asChild
 											>
-												View Our Work
+												<a href='#gallery'>View Our Work</a>
 											</Button>
 										</m.div>
 									</m.div>
@@ -390,7 +405,7 @@ export default function HomePage() {
 													className='inline-block'
 												/>
 											</m.div>
-											<h3 className='font-heading text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2 sm:mb-3'>
+											<h3 className='font-heading text-lg sm:text-xl lg:text-2xl font-bold text-card-foreground mb-2 sm:mb-3 lg:mb-4'>
 												{stat.label}
 											</h3>
 											<p className='text-sm sm:text-base text-muted-foreground leading-relaxed'>
@@ -419,8 +434,148 @@ export default function HomePage() {
 								</div>
 								<div className='flex items-center gap-2 sm:gap-3 text-sm sm:text-base text-muted-foreground'>
 									<Wrench className='w-5 h-5 sm:w-6 sm:h-6 text-orange-600' />
-									<span className='font-medium'>Quality Guarantee</span>
+									<span className='font-medium'>10-Year Warranty</span>
 								</div>
+							</m.div>
+						</div>
+					</section>
+
+					{/* About Us Section */}
+					<section id='about-us' className='py-16 sm:py-24 lg:py-32'>
+						<div className='max-w-6xl mx-auto px-4 sm:px-6'>
+							<div className='grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center'>
+								<m.div
+									className='relative'
+									variants={fadeInLeft}
+									initial='initial'
+									whileInView='animate'
+									viewport={{ once: true }}
+								>
+									<m.div
+										whileHover={{ scale: 1.02 }}
+										transition={{ type: 'spring', stiffness: 300 }}
+									>
+										<Image
+											src='/completed-house-orange-roof.png'
+											alt='About Au Roofing'
+											width={600}
+											height={400}
+											className='rounded-xl sm:rounded-2xl shadow-2xl w-full h-auto object-cover'
+										/>
+									</m.div>
+								</m.div>
+								<m.div
+									initial='initial'
+									whileInView='animate'
+									variants={staggerContainer}
+									className='text-center lg:text-left'
+									viewport={{ once: true }}
+								>
+									<m.h2
+										className='font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4 sm:mb-6'
+										variants={fadeInRight}
+									>
+										About Au Roofing
+									</m.h2>
+									<m.p
+										className='text-base sm:text-lg lg:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed'
+										variants={fadeInRight}
+									>
+										We are a family-owned business dedicated to providing
+										top-quality roofing services. With over a decade of
+										experience, we have built a reputation for reliability,
+										craftsmanship, and customer satisfaction.
+									</m.p>
+									<m.p
+										className='text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed'
+										variants={fadeInRight}
+									>
+										Our team of certified professionals is committed to
+										protecting your home with the best materials and techniques
+										in the industry.
+									</m.p>
+									<m.div variants={fadeInRight}>
+										<m.div
+											whileHover={{ scale: 1.05 }}
+											whileTap={{ scale: 0.95 }}
+										>
+											<Button
+												size='lg'
+												className='bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg'
+											>
+												Learn More About Us
+											</Button>
+										</m.div>
+									</m.div>
+								</m.div>
+							</div>
+						</div>
+					</section>
+
+					{/* Why Choose Us Section */}
+					<section
+						id='why-choose-us'
+						className='py-16 sm:py-24 lg:py-32 bg-gradient-to-br from-primary/5 via-background to-primary/10'
+					>
+						<div className='max-w-6xl mx-auto px-4 sm:px-6'>
+							<m.div
+								className='text-center mb-12 sm:mb-16 lg:mb-20'
+								initial={{ opacity: 0, y: 40 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.6 }}
+							>
+								<h2 className='font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4 sm:mb-6'>
+									Why Choose Us
+								</h2>
+								<p className='text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto'>
+									We provide more than just a roof over your head. We deliver
+									peace of mind with our commitment to quality and service.
+								</p>
+							</m.div>
+							<m.div
+								className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8'
+								variants={staggerContainer}
+								initial='initial'
+								whileInView='animate'
+								viewport={{ once: true }}
+							>
+								{[
+									{
+										icon: Award,
+										title: 'Experienced Professionals',
+										desc: 'Our team consists of certified and experienced roofers who are masters of their craft.',
+									},
+									{
+										icon: CheckCircle,
+										title: 'Quality Materials',
+										desc: 'We use only the highest-quality, durable materials to ensure your roof lasts for years.',
+									},
+									{
+										icon: Heart,
+										title: 'Customer Satisfaction',
+										desc: 'Your satisfaction is our top priority. We work closely with you to meet your needs.',
+									},
+								].map(feature => (
+									<m.div
+										key={feature.title}
+										variants={fadeInUp}
+										whileHover={{ y: -8, scale: 1.02 }}
+										transition={{ type: 'spring', stiffness: 300 }}
+									>
+										<Card className='bg-card border-border/20 hover:shadow-2xl transition-all duration-300 h-full'>
+											<CardContent className='p-6 lg:p-8 text-center'>
+												<feature.icon className='w-12 h-12 text-primary mb-4 mx-auto' />
+												<h3 className='font-heading text-xl lg:text-2xl font-bold text-card-foreground mb-3'>
+													{feature.title}
+												</h3>
+												<p className='text-muted-foreground leading-relaxed'>
+													{feature.desc}
+												</p>
+											</CardContent>
+										</Card>
+									</m.div>
+								))}
 							</m.div>
 						</div>
 					</section>
@@ -444,7 +599,7 @@ export default function HomePage() {
 							</m.div>
 
 							<m.div
-								className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8'
+								className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8'
 								variants={staggerContainer}
 								initial='initial'
 								whileInView='animate'
@@ -453,22 +608,47 @@ export default function HomePage() {
 								{[
 									{
 										icon: Shield,
-										title: 'Roof Replacement',
-										desc: 'Complete roof replacement with high-quality materials and professional installation.',
+										title: 'Roof Inspection',
+										desc: 'Thorough inspections to assess the condition of your roof and identify potential issues.',
 									},
 									{
 										icon: Wrench,
-										title: 'Roof Repair',
-										desc: 'Expert repair services for leaks, damaged shingles, and structural issues.',
+										title: 'Leak Fixing',
+										desc: 'Prompt and reliable leak detection and repair to protect your property from water damage.',
 									},
 									{
-										icon: Clock,
-										title: 'Emergency Services',
-										desc: '24/7 emergency roofing services for urgent repairs and storm damage.',
+										icon: CheckCircle,
+										title: 'Gutter Replacement',
+										desc: 'Installation of new, high-quality gutters to ensure proper drainage and prevent water damage.',
+									},
+									{
+										icon: CheckCircle,
+										title: 'Downpipe Replacement',
+										desc: 'Replacing old or damaged downpipes to maintain the integrity of your roofing system.',
+									},
+									{
+										icon: Award,
+										title: 'Roof Restoration',
+										desc: 'Comprehensive restoration services to extend the life of your roof and improve its appearance.',
+									},
+									{
+										icon: Heart,
+										title: 'Metal Roof Painting',
+										desc: 'Professional painting for metal roofs to enhance curb appeal and provide long-lasting protection.',
+									},
+									{
+										icon: Award,
+										title: 'Roof Restoration',
+										desc: 'Bringing your roof back to its former glory with our expert restoration techniques.',
+									},
+									{
+										icon: ThumbsUp,
+										title: 'Roof Cleaning',
+										desc: 'Safe and effective cleaning to remove moss, algae, and debris, improving your roof’s look and longevity.',
 									},
 								].map((service, index) => (
 									<m.div
-										key={service.title}
+										key={service.title + index}
 										variants={fadeInUp}
 										whileHover={{ y: -8, scale: 1.02 }}
 										transition={{ type: 'spring', stiffness: 300 }}
@@ -495,9 +675,111 @@ export default function HomePage() {
 						</div>
 					</section>
 
+					{/* Reviews Section */}
+					<section id='reviews' className='py-16 sm:py-24 lg:py-32'>
+						<div className='max-w-6xl mx-auto px-4 sm:px-6'>
+							<m.div
+								className='text-center mb-12 sm:mb-16 lg:mb-20'
+								initial={{ opacity: 0, y: 40 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.6 }}
+							>
+								<h2 className='font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4 sm:mb-6'>
+									What Our Clients Say
+								</h2>
+								<p className='text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto'>
+									We are proud of the feedback we receive from our happy
+									customers.
+								</p>
+							</m.div>
+							<m.div
+								className='grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8'
+								variants={staggerContainer}
+								initial='initial'
+								whileInView='animate'
+								viewport={{ once: true }}
+							>
+								{[
+									{
+										name: 'Gerhard Bergher',
+										review:
+											'Beck did an amazing job fixing the roof on our property. Fast, efficient service at a fair price. I definitely recommend Beck if you need someone reliable to fix a leaking roof!',
+										avatar: '/placeholder-user.jpg',
+									},
+									{
+										name: 'Andrew Hammond',
+										review:
+											"Our property in Annandale was recently repaired by AU Roofing. From the initial meetings with Beck, through the assessment and diagnosis of the issues, to the work performed, everything was seamless, professional, and transparent. We cannot fault Beck's attention to detail, the open line of communication throughout the process, his reliability, professionalism, and the quality of the work performed — it was second to none.",
+										avatar: '/placeholder-user.jpg',
+									},
+									{
+										name: 'Matt Wood',
+										review:
+											"Beck gave a very competitive quote and soon after completed the work: repointing the tile ridge caps, replacing a downpipe, and repairing damaged sarking. The work was thorough and not rushed, with a fantastic result. Very hassle‑free and great value. I've already asked for a quote for more work.",
+										avatar: '/placeholder-user.jpg',
+									},
+									{
+										name: 'Davlatyor Boyjanov',
+										review:
+											'The team at AU Roofing was outstanding. They inspected the problem, gave me a clear quote, and completed the job quickly and efficiently. Very professional and attentive throughout the whole process. They explained everything clearly and I was really happy with the results. I highly recommend their services.',
+										avatar: '/placeholder-user.jpg',
+									},
+								].map(review => (
+									<m.div
+										key={review.name}
+										variants={fadeInUp}
+										whileHover={{ y: -8, scale: 1.02 }}
+										transition={{ type: 'spring', stiffness: 300 }}
+									>
+										<Card className='bg-card border-border/20 hover:shadow-xl transition-all duration-300 h-full'>
+											<CardContent className='p-6 lg:p-8 flex flex-col items-center text-center'>
+												<Image
+													src={review.avatar}
+													alt={review.name}
+													width={80}
+													height={80}
+													className='rounded-full mb-4 border-4 border-primary/20'
+												/>
+												<div className='flex mb-2'>
+													{[...Array(5)].map((_, i) => (
+														<Star
+															key={i}
+															className='w-5 h-5 text-yellow-400 fill-current'
+														/>
+													))}
+												</div>
+												<p className='text-muted-foreground italic mb-4'>
+													"{review.review}"
+												</p>
+												<h3 className='font-bold text-lg text-card-foreground'>
+													{review.name}
+												</h3>
+											</CardContent>
+										</Card>
+									</m.div>
+								))}
+							</m.div>
+						</div>
+					</section>
+
 					{/* Before/After Gallery */}
 					<section id='gallery' className='py-16 sm:py-24 lg:py-32'>
 						<div className='max-w-6xl mx-auto px-4 sm:px-6'>
+							<m.div
+								className='text-center mb-12 sm:mb-16 lg:mb-20'
+								initial={{ opacity: 0, y: 40 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.6 }}
+							>
+								<h2 className='font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4 sm:mb-6'>
+									Gallery
+								</h2>
+								<p className='text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto'>
+									See the quality of our work for yourself.
+								</p>
+							</m.div>
 							<m.div
 								initial={{ opacity: 0, y: 60 }}
 								whileInView={{ opacity: 1, y: 0 }}
@@ -556,8 +838,8 @@ export default function HomePage() {
 											{
 												icon: Phone,
 												title: 'Call Us',
-												info: '(555) 123-ROOF',
-												action: 'tel:+15551237663',
+												info: '0449 974 797',
+												action: 'tel:0449974797',
 											},
 											{
 												icon: Mail,
@@ -618,8 +900,9 @@ export default function HomePage() {
 										<Button
 											size='lg'
 											className='bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:w-auto min-h-[48px]'
+											asChild
 										>
-											Schedule Free Consultation
+											<a href='tel:0449974797'>Get Free Quote</a>
 										</Button>
 									</m.div>
 								</m.div>
@@ -786,6 +1069,95 @@ export default function HomePage() {
 							</div>
 						</div>
 					</section>
+
+					{/* Credentials Section */}
+					<section
+						id='credentials'
+						className='py-16 sm:py-24 lg:py-32 bg-background'
+					>
+						<div className='max-w-6xl mx-auto px-4 sm:px-6'>
+							<m.div
+								className='text-center mb-12 sm:mb-16 lg:mb-20'
+								initial={{ opacity: 0, y: 40 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.6 }}
+							>
+								<h2 className='font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4 sm:mb-6'>
+									Our Credentials
+								</h2>
+								<p className='text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto'>
+									We are a fully licensed and insured roofing company, committed
+									to the highest standards of safety and quality.
+								</p>
+							</m.div>
+							<m.div
+								className='max-w-4xl mx-auto bg-card/50 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-lg border border-border/20'
+								initial={{ opacity: 0, y: 60 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.8, delay: 0.2 }}
+							>
+								<div className='space-y-6 text-base sm:text-lg text-muted-foreground'>
+									<div className='flex flex-col sm:flex-row'>
+										<p className='font-semibold text-foreground w-48 flex-shrink-0'>
+											A.B.N:
+										</p>
+										<p>84758530529</p>
+									</div>
+									<div className='flex flex-col sm:flex-row'>
+										<p className='font-semibold text-foreground w-48 flex-shrink-0'>
+											NRMA Insurance:
+										</p>
+										<p>
+											Public Liability Policy:
+											<span className='font-mono ml-2'>6633404</span>
+										</p>
+									</div>
+									<div className='flex flex-col sm:flex-row'>
+										<p className='font-semibold text-foreground w-48 flex-shrink-0'>
+											ICARE Insurance:
+										</p>
+										<p>
+											Worker's Compensation Policy:
+											<span className='font-mono ml-2'>254515201</span>
+										</p>
+									</div>
+									<div className='border-t border-border/20 my-6'></div>
+									<div className='flex flex-col sm:flex-row'>
+										<p className='font-semibold text-foreground w-48 flex-shrink-0'>
+											Mobile:
+										</p>
+										<a
+											href='tel:0449974797'
+											className='text-primary hover:underline'
+										>
+											0449 974 797
+										</a>
+									</div>
+									<div className='flex flex-col sm:flex-row'>
+										<p className='font-semibold text-foreground w-48 flex-shrink-0'>
+											Address:
+										</p>
+										<a
+											href='https://maps.app.goo.gl/YJHkYw81zseTfb9E6'
+											target='_blank'
+											rel='noopener noreferrer'
+											className='hover:underline'
+										>
+											36 Ross St, Forest Lodge NSW 2037, Australia
+										</a>
+									</div>
+									<div className='flex flex-col sm:flex-row'>
+										<p className='font-semibold text-foreground w-48 flex-shrink-0'>
+											Company:
+										</p>
+										<p>Au Roofing</p>
+									</div>
+								</div>
+							</m.div>
+						</div>
+					</section>
 				</main>
 
 				{/* Footer */}
@@ -803,9 +1175,9 @@ export default function HomePage() {
 								transition={{ type: 'spring', stiffness: 300 }}
 							>
 								<Image
-									src='/logo.jpg'
+									src='/logo.png'
 									alt='Au Roofing Logo'
-									width={160}
+									width={200}
 									height={80}
 									className='h-10 sm:h-12 lg:h-16 w-auto mb-3 sm:mb-4 lg:mb-6 brightness-0 invert mx-auto'
 								/>
