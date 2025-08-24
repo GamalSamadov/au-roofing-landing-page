@@ -17,7 +17,6 @@ import {
 	Clock,
 	Menu,
 	ExternalLink,
-	Users,
 	Award,
 	Star,
 	Heart,
@@ -118,7 +117,7 @@ export default function HomePage() {
 	return (
 		<LazyMotion features={domAnimation}>
 			<div
-				className='min-h-screen bg-background'
+				className='min-h-screen bg-background overflow-x-hidden'
 				itemScope
 				itemType='https://schema.org/WebPage'
 			>
@@ -844,8 +843,8 @@ export default function HomePage() {
 											{
 												icon: Mail,
 												title: 'Email',
-												info: 'info@auroofing.com',
-												action: 'mailto:info@auroofing.com',
+												info: 'auroofing1@gmail.com',
+												action: 'mailto:auroofing1@gmail.com',
 											},
 											{
 												icon: MapPin,
